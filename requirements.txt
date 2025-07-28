@@ -1,4 +1,12 @@
-torch
-diffusers
-transformers
-accelerate
+# Core dependencies based on successful conda environment setup
+# PyTorch with CUDA support (equivalent to nightly build used in conda)
+torch>=2.6.0
+torchaudio
+# Audio processing library - CRITICAL for Canary model
+lhotse
+# Audio file I/O for robust audio handling
+soundfile
+# Cog interface
+cog
+# NeMo toolkit from source with ASR support
+nemo_toolkit[asr] @ git+https://github.com/NVIDIA/NeMo.git

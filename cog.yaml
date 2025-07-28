@@ -7,8 +7,19 @@ build:
 
   # a list of ubuntu apt packages to install
   system_packages:
-    - "libgl1-mesa-glx"
+    - "libgl1-mesa-dev"
     - "libglib2.0-0"
+    - "ffmpeg"
+    - "libsndfile1"
+    - "sox"
+    - "libsox-fmt-all"
+    - "git"
+    - "build-essential"
+    - "python3-dev"
+    - "cmake"
+    - "pkg-config"
+    - "gcc"
+    - "g++"
 
   # python version in the form '3.11' or '3.11.4'
   python_version: "3.11"
@@ -18,8 +29,15 @@ build:
 
   # commands run after the environment is setup
   run:
-  - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/latest/download/pget_$(uname -s)_$(uname -m)"
-  - chmod +x /usr/local/bin/pget
+    - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/latest/download/pget_$(uname -s)_$(uname -m)"
+    - chmod +x /usr/local/bin/pget
+    # Install additional dependencies we discovered during testing
+    - pip install --no-cache-dir sacrebleu --verbose
+    # Install compatible dependencies based on our working conda setup - AFTER all other installations
+    - pip install --no-cache-dir --force-reinstall --no-binary=texterrors "texterrors<1.0.0" --verbose
+    # Critical: Install compatible NumPy and numba versions LAST to prevent conflicts
+    - pip install --no-cache-dir --force-reinstall "numpy==1.26.4" --verbose
+    - pip install --no-cache-dir --force-reinstall "numba==0.60.0" --verbose
 
 # predict.py defines how predictions are run on your model
 predict: "predict.py:Predictor"
